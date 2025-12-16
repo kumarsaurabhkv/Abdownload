@@ -1,4 +1,4 @@
-// app.js - Main application logic with KV-backed dynamic versions
+// app.js - Main application logic with KV-backed dynamic versions + Accordion Support
 
 let versions = [];
 
@@ -20,18 +20,20 @@ async function loadVersions() {
 
         versions = await response.json();
 
-        // Ensure sorted descending (latest first)
+        // Sort descending (latest first)
         versions.sort((a, b) => compareVersions(b, a));
 
         populateVersionGrid();
 
-        // After grid is populated, try to select the first (latest) as default
-        document.querySelector('.version-item')?.classList.add('selected');
+        // After grid is built, default select the latest version item
+        setTimeout(() => {
+            document.querySelector('.version-item')?.classList.add('selected');
+        }, 100); // Small delay to ensure DOM is ready
     } catch (err) {
         console.error('Failed to load versions from KV API:', err);
         alert('Failed to load version list. Please try refreshing the page.');
 
-        // Optional: fallback to a minimal list if API completely fails
+        // Fallback list
         versions = ["12.3.1", "12.3", "12.2.7", "12.0"];
         versions.sort((a, b) => compareVersions(b, a));
         populateVersionGrid();
@@ -52,14 +54,14 @@ function populateVersionGrid() {
     const versionSections = document.getElementById('version-sections');
     if (!versionSections) return;
 
-    versionSections.innerHTML = ''; // Clear previous content
+    versionSections.innerHTML = ''; // Clear previous
 
     const groupedVersions = groupVersionsByMajor(versions);
     const majorVersions = Object.keys(groupedVersions).sort((a, b) => b - a);
 
     majorVersions.forEach(major => {
         const section = document.createElement('div');
-        section.className = 'version-section';
+        section.className = 'version-section collapsed'; // Start collapsed
 
         const header = document.createElement('div');
         header.className = 'section-header';
@@ -90,6 +92,16 @@ function populateVersionGrid() {
         section.appendChild(header);
         section.appendChild(content);
         versionSections.appendChild(section);
+
+        // === Accordion Toggle Logic ===
+        header.addEventListener('click', () => {
+            section.classList.toggle('collapsed');
+        });
+
+        // === Auto-expand only the latest major version (12) ===
+        if (major === '12') {
+            section.classList.remove('collapsed');
+        }
     });
 }
 
@@ -115,7 +127,7 @@ function detectOS() {
 
     document.getElementById('os-select').value = osValue;
     osDetection.textContent = `Detected: ${osName}`;
-    osDetection.style.color = '#ff2e5e'; // Match your theme
+    osDetection.style.color = '#ff2e5e';
     return osValue;
 }
 
@@ -162,4 +174,4 @@ document.getElementById('download-btn').addEventListener('click', function() {
 
 // Initial setup
 detectOS();
-loadVersions(); // This will populate the grid and set default selection
+loadVersions();

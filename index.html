@@ -4,427 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StaticAbletonDownloader</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link rel="icon" href="https://cdn-resources.ableton.com/80bA26cPQ1hEJDFjpUKntxfqdmG3ZykO/static/images/favicon.ico" type="image/vnd.icon">
     <style>
-        /* Your existing CSS remains unchanged */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-       
-        body {
+        .gradient-bg {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
         }
-       
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: rgba(30, 30, 46, 0.9);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-            margin-top: 20px;
+        .gradient-header {
+            background: linear-gradient(90deg, #6bb1ff, #ff5b5b);
         }
-       
-        header {
-            background: rgba(20, 20, 36, 0.95);
-            padding: 25px 30px;
-            text-align: center;
-            border-bottom: 1px solid rgba(107, 177, 255, 0.2);
+        .gradient-btn {
+            background: linear-gradient(135deg, #6bb1ff, #ff5b5b);
         }
-       
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
+        .gradient-text {
             background: linear-gradient(90deg, #6bb1ff, #ff5b5b);
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 15px rgba(107, 177, 255, 0.3);
-        }
-       
-        .subtitle {
-            color: #a0aec0;
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-       
-        .content-area {
-            padding: 30px;
-            min-height: 500px;
-        }
-       
-        .step-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #6bb1ff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-       
-        .step-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(107, 177, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-       
-        .form-group {
-            margin-bottom: 25px;
-        }
-       
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: #cbd5e0;
-            font-size: 1.1rem;
-        }
-       
-        select, input {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(26, 32, 44, 0.7);
-            color: #fff;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-       
-        select:focus, input:focus {
-            outline: none;
-            border-color: #6bb1ff;
-            box-shadow: 0 0 0 3px rgba(107, 177, 255, 0.3);
-        }
-       
-        .btn {
-            background: linear-gradient(135deg, #6bb1ff, #ff5b5b);
-            color: white;
-            border: none;
-            padding: 16px 30px;
-            font-size: 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-        }
-       
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-       
-        .btn:active {
-            transform: translateY(1px);
-        }
-       
-        .version-sections {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-       
-        .version-section {
-            background: rgba(20, 20, 36, 0.5);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-       
-        .section-header {
-            background: linear-gradient(90deg, #6bb1ff, #ff5b5b);
-            padding: 12px 20px;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-       
-        .section-content {
-            padding: 15px;
-        }
-       
-        .version-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 10px;
-        }
-       
-        .version-item {
-            padding: 10px;
-            background: rgba(30, 30, 46, 0.7);
-            border-radius: 6px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-       
-        .version-item:hover {
-            background: rgba(107, 177, 255, 0.2);
-        }
-       
-        .version-item.selected {
-            background: linear-gradient(135deg, #ff5b5b, #6bb1ff);
-            font-weight: bold;
-        }
-       
-        .info-text {
-            background: rgba(20, 20, 36, 0.5);
-            border-left: 4px solid #6bb1ff;
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            margin: 20px 0;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-       
-        .info-text strong {
-            color: #ff5b5b;
-        }
-       
-        .download-link {
-            display: none;
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(20, 20, 36, 0.7);
-            border-radius: 10px;
-            border: 1px solid rgba(107, 177, 255, 0.3);
-        }
-       
-        .download-link a {
-            color: #6bb1ff;
-            font-size: 1.2rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(30, 30, 46, 0.5);
-            border-radius: 8px;
-            word-break: break-all;
-        }
-       
-        .download-link a:hover {
-            color: #ff5b5b;
-            text-decoration: underline;
-        }
-       
-        .os-detection {
-            display: inline-block;
-            background: rgba(107, 177, 255, 0.1);
-            border-radius: 4px;
-            padding: 3px 8px;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            border: 1px solid rgba(107, 177, 255, 0.2);
-        }
-       
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #a0aec0;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-       
-        .github-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #6bb1ff;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 10px;
-            background: rgba(107, 177, 255, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(107, 177, 255, 0.2);
-        }
-       
-        .github-link:hover {
-            background: rgba(107, 177, 255, 0.2);
-            color: #ff5b5b;
-            transform: translateY(-2px);
-        }
-       
-        .custom-version-section {
-            background: rgba(20, 20, 36, 0.5);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            margin-top: 20px;
-        }
-       
-        .custom-version-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-       
-        .custom-version-input input {
-            flex: 1;
-        }
-       
-        .custom-version-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #6bb1ff;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 14px 20px;
-            border-radius: 10px;
-            background: rgba(107, 177, 255, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(107, 177, 255, 0.2);
-        }
-       
-        .custom-version-btn:hover {
-            background: rgba(107, 177, 255, 0.2);
-            color: #ff5b5b;
-            transform: translateY(-2px);
-            cursor: pointer;
-        }
-       
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-           
-            .step-title {
-                font-size: 1.5rem;
-            }
-           
-            .version-grid {
-                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            }
-           
-            .custom-version-input {
-                flex-direction: column;
-            }
-           
-            .custom-version-btn {
-                width: 100%;
-            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>StaticAbletonDownloader</h1>
-            <p class="subtitle">Get the exact version you need with one click - all in one file!</p>
+<body class="gradient-bg text-white min-h-screen flex flex-col items-center py-8 px-4">
+    <div class="max-w-4xl w-full bg-gray-900/90 rounded-2xl shadow-2xl overflow-hidden">
+        <header class="bg-gray-900/95 p-8 text-center border-b border-blue-400/20">
+            <h1 class="text-5xl md:text-6xl font-bold gradient-text shadow-lg">StaticAbletonDownloader</h1>
+            <p class="text-slate-300 text-xl mt-4">Get the exact version you need with one click - all in one file!</p>
         </header>
-       
-        <div class="content-area">
-            <div class="step-title">
-                <div class="step-icon"><i class="fas fa-download"></i></div>
-                Download Ableton Live Installer
-            </div>
-           
-            <p class="info-text">
-                <strong>Disclaimer:</strong> This tool provides direct download links for Ableton Live installers, directly from Ableton's servers. <br>
-                It does not download a activated version. This is not piracy.
-            </p>
-           
-            <div class="form-group">
-                <label for="os-select">Select Operating System: <span class="os-detection" id="os-detection">Detecting your OS...</span></label>
-                <select id="os-select">
-                    <option value="windows">Windows</option>
-                    <option value="mac_intel">macOS (Intel)</option>
-                    <option value="mac_arm">macOS (Apple Silicon)</option>
-                </select>
-            </div>
-           
-            <div class="form-group">
-                <label for="edition-select">Select Edition:</label>
-                <select id="edition-select">
-                    <option value="suite">Suite</option>
-                    <option value="standard">Standard</option>
-                    <option value="intro">Intro</option>
-                    <option value="lite">Lite</option>
-                </select>
-            </div>
-           
-            <div class="form-group">
-                <label>Select Version:</label>
-                <div class="version-sections" id="version-sections">
-                    <!-- Version sections will be populated by JS -->
+
+        <div class="p-8">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-blue-400/10 rounded-full flex items-center justify-center text-2xl">
+                    <i class="fas fa-download text-blue-400"></i>
                 </div>
-               
-                <!-- Custom Version Section -->
-                <div class="custom-version-section">
-                    <div class="section-header">
-                        Custom Version
+                <h2 class="text-3xl font-semibold text-blue-400">Download Ableton Live Installer</h2>
+            </div>
+
+            <div class="bg-gray-800/50 border-l-4 border-blue-400 p-6 rounded-r-lg mb-8 text-sm md:text-base">
+                <strong class="text-red-500">Disclaimer:</strong> This tool provides direct download links for Ableton Live installers, directly from Ableton's servers. <br>
+                It does not download an activated version. This is not piracy.
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <label class="block text-slate-300 font-medium mb-2 text-lg">
+                        Select Operating System:
+                        <span class="inline-block bg-blue-400/10 border border-blue-400/20 rounded px-2 py-1 text-sm ml-3" id="os-detection">Detecting your OS...</span>
+                    </label>
+                    <select id="os-select" class="w-full bg-gray-800/70 border border-white/10 rounded-lg px-5 py-4 text-white focus:border-blue-400 focus:ring focus:ring-blue-400/30">
+                        <option value="windows">Windows</option>
+                        <option value="mac_intel">macOS (Intel)</option>
+                        <option value="mac_arm">macOS (Apple Silicon)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-2 text-lg">Select Edition:</label>
+                    <select id="edition-select" class="w-full bg-gray-800/70 border border-white/10 rounded-lg px-5 py-4 text-white focus:border-blue-400 focus:ring focus:ring-blue-400/30">
+                        <option value="suite">Suite</option>
+                        <option value="standard">Standard</option>
+                        <option value="intro">Intro</option>
+                        <option value="lite">Lite</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-medium mb-2 text-lg">Select Version:</label>
+                    <div class="space-y-5" id="version-sections">
+                        <!-- Version sections will be populated by JS -->
                     </div>
-                    <div class="section-content">
-                        <div class="custom-version-input">
-                            <input type="text" id="custom-version-input" placeholder="Enter version (e.g., 12.3.1)">
-                            <button class="custom-version-btn" id="custom-version-btn">
-                                Use Custom Version
-                            </button>
+
+                    <!-- Custom Version Section -->
+                    <div class="bg-gray-800/50 rounded-lg shadow-xl mt-8">
+                        <div class="gradient-header text-white font-semibold text-xl py-3 px-6">
+                            Custom Version
                         </div>
-                        <p style="margin-top: 10px; font-size: 0.9rem; color: #a0aec0;">
-                            Enter a version not listed above. Format: Major.Minor.Patch (e.g., 12.3.1)
-                        </p>
+                        <div class="p-6">
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <input type="text" id="custom-version-input" placeholder="Enter version (e.g., 12.3.1)" class="flex-1 bg-gray-800/70 border border-white/10 rounded-lg px-5 py-4 text-white focus:border-blue-400 focus:ring focus:ring-blue-400/30">
+                                <button id="custom-version-btn" class="bg-blue-400/10 border border-blue-400/20 text-blue-400 font-medium py-4 px-8 rounded-lg hover:bg-blue-400/20 hover:text-red-500 transition transform hover:-translate-y-1">
+                                    Use Custom Version
+                                </button>
+                            </div>
+                            <p class="text-slate-400 text-sm mt-4">
+                                Enter a version not listed above. Format: Major.Minor.Patch (e.g., 12.3.1)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="download-btn" class="w-full gradient-btn text-white font-bold text-xl py-5 rounded-lg shadow-xl flex items-center justify-center gap-3 hover:-translate-y-1 transition">
+                    Download Now <i class="fas fa-download"></i>
+                </button>
+
+                <div id="download-link" class="hidden text-center bg-gray-800/70 border border-blue-400/30 rounded-lg p-8 mt-8">
+                    <p class="text-xl mb-4">Your download is ready:</p>
+                    <a id="direct-download-link" target="_blank" class="block text-blue-400 text-xl font-medium bg-gray-800/50 py-3 px-6 rounded-lg break-all hover:text-red-500 hover:underline">Download Ableton Live</a>
+                    <div class="bg-gray-800/50 border-l-4 border-blue-400 p-4 rounded-r-lg mt-6">
+                        <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                        If the download doesn't start automatically, click the link above
                     </div>
                 </div>
             </div>
-           
-            <button class="btn" id="download-btn">
-                Download Now <i class="fas fa-download"></i>
-            </button>
-           
-            <div class="download-link" id="download-link">
-                <p>Your download is ready:</p>
-                <a id="direct-download-link" target="_blank">Download Ableton Live</a>
-                <p class="info-text" style="margin-top: 15px; margin-bottom: 0;">
-                    <i class="fas fa-info-circle"></i> If the download doesn't start automatically, click the link above
-                </p>
-            </div>
-           
         </div>
-       
-        <footer>
-            <a href="https://github.com/devilAPI/StaticAbletonDownloader/" class="github-link">
-                <i class="fab fa-github"></i> View on GitHub
+
+        <footer class="border-t border-white/10 text-center py-6 flex flex-col gap-4">
+            <a href="https://audioz.download/" class="inline-flex items-center gap-3 text-blue-400 bg-blue-400/10 border border-blue-400/20 py-3 px-6 rounded-lg hover:bg-blue-400/20 hover:text-red-500 transition transform hover:-translate-y-1">
+                <i class="fab fa-github text-xl"></i> View on Audioz
             </a>
-            <p>devilAPI &copy; 2025</p>
+            <p class="text-slate-400">Audiowarez &copy; 2025</p>
         </footer>
     </div>
 
     <!-- Main application script (unchanged except for updated versions) -->
     <script src="app.js"></script>
-
     <!-- Separate script for fetching and auto-selecting the latest version -->
     <script src="fetch-latest.js"></script>
 </body>

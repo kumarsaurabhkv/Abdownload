@@ -1,4 +1,4 @@
-// fetch-latest.js - Updated and fixed version (robust DOM insertion + better parsing)
+// fetch-latest.js - Auto-detect latest version and persist new ones to KV
 
 (async function() {
     try {
@@ -13,66 +13,103 @@
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
 
-        // Improved parsing: look for headings that start with a version number
         const headings = doc.querySelectorAll('h2, h3');
         let latestVersion = null;
 
         for (let heading of headings) {
             const headingText = heading.textContent.trim();
-            // Match patterns like "12.3.1 Release Notes" or just "12.3.1"
             const match = headingText.match(/^(\d+\.\d+(\.\d+)?)/);
             if (match) {
                 latestVersion = match[1];
-                break; // First matching heading = latest version
+                break; // First match is the latest
             }
         }
 
-        if (latestVersion) {
-            console.log('Latest Ableton Live version detected:', latestVersion);
-
-            // Auto-select in grid
-            let found = false;
-            document.querySelectorAll('.version-item').forEach(item => {
-                if (item.dataset.version === latestVersion) {
-                    item.classList.add('selected');
-                    found = true;
-                } else {
-                    item.classList.remove('selected');
-                }
-            });
-
-            // Fallback to custom input if not in list
-            if (!found) {
-                const customInput = document.getElementById('custom-version-input');
-                if (customInput) {
-                    customInput.value = latestVersion;
-                    customInput.style.borderColor = '#6bb1ff';
-                    customInput.style.boxShadow = '0 0 0 3px rgba(107, 177, 255, 0.3)';
-                }
-            }
-
-            // Safe notice insertion (waits for elements to exist)
-            const notice = document.createElement('div');
-            notice.className = 'info-text';
-            notice.innerHTML = `<strong>Latest version auto-selected:</strong> ${latestVersion} (fetched live)`;
-
-            const insertNotice = () => {
-                const contentArea = document.querySelector('.content-area');
-                const versionSections = document.getElementById('version-sections');
-                if (contentArea && versionSections && versionSections.parentNode === contentArea) {
-                    contentArea.insertBefore(notice, versionSections);
-                } else {
-                    // Retry after a short delay if DOM not ready yet
-                    setTimeout(insertNotice, 100);
-                }
-            };
-
-            insertNotice();
-        } else {
+        if (!latestVersion) {
             console.warn('No version found in release notes');
+            return;
         }
+
+        console.log('Latest Ableton Live version detected:', latestVersion);
+
+        // Load current versions from KV
+        let currentVersions = [];
+        try {
+            const resp = await fetch('/api/get-versions');
+            if (resp.ok) {
+                currentVersions = await resp.json();
+            }
+        } catch (e) {
+            console.warn('Could not fetch current versions for comparison:', e);
+        }
+
+        let isNew = !currentVersions.includes(latestVersion);
+
+        // If new version detected, save it permanently
+        if (isNew) {
+            currentVersions.unshift(latestVersion); // Add as newest
+
+            try {
+                const updateResp = await fetch('/api/update-versions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentVersions)
+                });
+
+                if (updateResp.ok) {
+                    console.log('New version successfully saved to KV:', latestVersion);
+                    
+                    const savedNotice = document.createElement('div');
+                    savedNotice.className = 'info-text';
+                    savedNotice.innerHTML = `<strong>New version auto-added & saved permanently:</strong> ${latestVersion}`;
+                    document.querySelector('.content-area').insertBefore(savedNotice, document.getElementById('version-sections'));
+                } else {
+                    console.warn('Failed to save new version to KV');
+                }
+            } catch (e) {
+                console.warn('Error calling update API:', e);
+            }
+        }
+
+        // Auto-select the latest version in the UI
+        let found = false;
+        document.querySelectorAll('.version-item').forEach(item => {
+            if (item.dataset.version === latestVersion) {
+                item.classList.add('selected');
+                found = true;
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+
+        // If not in grid (very new), use custom input
+        if (!found) {
+            const customInput = document.getElementById('custom-version-input');
+            if (customInput) {
+                customInput.value = latestVersion;
+                customInput.style.borderColor = '#ff2e5e';
+                customInput.style.boxShadow = '0 0 0 3px rgba(255, 46, 94, 0.3)';
+            }
+        }
+
+        // Always show the "latest detected" notice
+        const notice = document.createElement('div');
+        notice.className = 'info-text';
+        notice.innerHTML = `<strong>Latest version auto-selected:</strong> ${latestVersion} (fetched live from Ableton)`;
+
+        const insertNotice = () => {
+            const contentArea = document.querySelector('.content-area');
+            const versionSections = document.getElementById('version-sections');
+            if (contentArea && versionSections) {
+                contentArea.insertBefore(notice, versionSections);
+            } else {
+                setTimeout(insertNotice, 100);
+            }
+        };
+        insertNotice();
+
     } catch (err) {
-        console.warn('Failed to fetch latest version via proxy:', err);
-        // Fallback: keep default selection from app.js
+        console.warn('Failed to fetch latest version:', err);
+        // Fallback: do nothing, user can still select manually
     }
 })();

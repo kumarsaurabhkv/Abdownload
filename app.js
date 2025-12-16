@@ -145,6 +145,7 @@ document.getElementById('custom-version-btn').addEventListener('click', function
 });
 
 // Download button
+// Download button - Now auto-starts download immediately
 document.getElementById('download-btn').addEventListener('click', function() {
     const os = document.getElementById('os-select').value;
     const edition = document.getElementById('edition-select').value;
@@ -164,6 +165,16 @@ document.getElementById('download-btn').addEventListener('click', function() {
         url += "_64.zip";
     }
 
+    // Create hidden link and trigger download immediately
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ableton_live_${edition}_${version}${os.startsWith("mac") ? (os === "mac_intel" ? "_intel.dmg" : "_universal.dmg") : "_64.zip"}`; // Suggested filename
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Still show the ready message + fallback link (for rare cases where auto-download fails)
     const downloadLink = document.getElementById('download-link');
     const directLink = document.getElementById('direct-download-link');
     directLink.href = url;

@@ -3,7 +3,7 @@
 (async function() {
     try {
         // Use your own proxy URL here
-        const proxyUrl = 'https://abproxy.cmpxor.workers.dev/proxy';  // <-- CHANGE THIS TO YOUR ACTUAL DOMAIN
+        const proxyUrl = 'https://abproxy.cmpxor.workers.dev';  // <-- CHANGE THIS TO YOUR ACTUAL DOMAIN
         const targetUrl = 'https://www.ableton.com/en/release-notes/live-12/';
         const fetchUrl = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
 

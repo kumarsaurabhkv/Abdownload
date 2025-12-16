@@ -49,27 +49,23 @@
             <div class="form-group">
                 <label>Select Version:</label>
                 <div class="version-sections" id="version-sections">
-                    <!-- Version sections will be populated by JS -->
+                    <!-- Version sections populated by app.js -->
                 </div>
               
-                <!-- Custom Version Section -->
-               <!-- Custom Version Section -->
-<div class="custom-version-section">
-    <div class="section-header">
-        Custom Version
-    </div>
-    <div class="section-content">
-        <div class="custom-version-input">
-            <input type="text" id="custom-version-input" placeholder="Enter version (e.g., 12.3.1)">
-            <button class="custom-version-btn" id="custom-version-btn">
-                Use Custom Version
-            </button>
-        </div>
-        <p style="margin-top: 16px; color: #aaa;">
-            Enter a version not listed above. Format: Major.Minor.Patch (e.g., 12.3.1)
-        </p>
-    </div>
-</div>
+                <!-- Custom Version Section - Always visible and open -->
+                <div class="custom-version-section">
+                    <div class="custom-header">Custom Version</div>
+                    <div class="custom-version-input">
+                        <input type="text" id="custom-version-input" placeholder="Enter version (e.g., 12.3.1)">
+                        <button class="custom-version-btn" id="custom-version-btn">
+                            Use Custom Version
+                        </button>
+                    </div>
+                    <p class="custom-description">
+                        Enter a version not listed above. Format: Major.Minor.Patch (e.g., 12.3.1)
+                    </p>
+                </div>
+            </div>
           
             <button class="btn" id="download-btn">
                 Download Now <i class="fas fa-download"></i>
@@ -87,14 +83,12 @@
       
         <footer>
             <a href="https://audioz.download/" class="Audioz">
-                <i class="fab fa-github"></i> View on Audioz
+                <i class="fab fa-audio"></i> View on Audioz
             </a>
             <p>Audiowarez &copy; 2025</p>
         </footer>
     </div>
-    <!-- Main application script (unchanged except for updated versions) -->
     <script src="app.js"></script>
-    <!-- Separate script for fetching and auto-selecting the latest version -->
     <script src="fetch-latest.js"></script>
 </body>
 </html>

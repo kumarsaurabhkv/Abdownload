@@ -1,0 +1,348 @@
+/* tailwind-replacement.css */
+/* A complete, standalone CSS file replacing Tailwind CDN classes used in the updated HTML */
+/* No external dependencies — just include this file with <link rel="stylesheet" href="tailwind-replacement.css"> */
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+}
+
+@layer components {
+  /* Background gradients */
+  .gradient-bg {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+  }
+
+  .gradient-header {
+    background: linear-gradient(90deg, #6bb1ff, #ff5b5b);
+  }
+
+  .gradient-btn {
+    background: linear-gradient(135deg, #6bb1ff, #ff5b5b);
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #6bb1ff, #ff5b5b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Layout & Spacing */
+  .container-max-w-4xl {
+    max-width: 1024px;
+    width: 100%;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .gap-3 {
+    gap: 0.75rem;
+  }
+
+  .gap-4 {
+    gap: 1rem;
+  }
+
+  .space-y-5 {
+    > * + * {
+      margin-top: 1.25rem;
+    }
+  }
+
+  .space-y-8 {
+    > * + * {
+      margin-top: 2rem;
+    }
+  }
+
+  .py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .p-6 {
+    padding: 1.5rem;
+  }
+
+  .p-8 {
+    padding: 2rem;
+  }
+
+  .py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .py-5 {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+
+  .mb-6 {
+    margin-bottom: 1.5rem;
+  }
+
+  .mb-8 {
+    margin-bottom: 2rem;
+  }
+
+  .mt-4 {
+    margin-top: 1rem;
+  }
+
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+
+  .mt-8 {
+    margin-top: 2rem;
+  }
+
+  /* Typography */
+  .text-white {
+    color: #ffffff;
+  }
+
+  .text-slate-300 {
+    color: #cbd5e1;
+  }
+
+  .text-slate-400 {
+    color: #94a3b8;
+  }
+
+  .text-blue-400 {
+    color: #60a5fa;
+  }
+
+  .text-red-500 {
+    color: #ef4444;
+  }
+
+  .text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .md\:text-6xl {
+    @media (min-width: 768px) {
+      font-size: 3.75rem;
+    }
+  }
+
+  .font-medium {
+    font-weight: 500;
+  }
+
+  .font-semibold {
+    font-weight: 600;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  /* Borders & Shadows */
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+
+  .border {
+    border-width: 1px;
+  }
+
+  .border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .border-blue-400\/20 {
+    border-color: rgba(96, 165, 250, 0.2);
+  }
+
+  .border-blue-400\/30 {
+    border-color: rgba(96, 165, 250, 0.3);
+  }
+
+  .border-l-4 {
+    border-left-width: 4px;
+  }
+
+  .shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Backgrounds */
+  .bg-gray-900\/90 {
+    background-color: rgba(17, 24, 39, 0.9);
+  }
+
+  .bg-gray-900\/95 {
+    background-color: rgba(17, 24, 39, 0.95);
+  }
+
+  .bg-gray-800\/50 {
+    background-color: rgba(31, 41, 55, 0.5);
+  }
+
+  .bg-gray-800\/70 {
+    background-color: rgba(31, 41, 55, 0.7);
+  }
+
+  .bg-blue-400\/10 {
+    background-color: rgba(96, 165, 250, 0.1);
+  }
+
+  .bg-blue-400\/20 {
+    background-color: rgba(96, 165, 250, 0.2);
+  }
+
+  /* Forms */
+  .block {
+    display: block;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .flex-1 {
+    flex: 1 1 0%;
+  }
+
+  select,
+  input[type="text"] {
+    background-color: rgba(31, 41, 55, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+
+  select:focus,
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+  }
+
+  /* Buttons & Hover Effects */
+  .hover\:-translate-y-1:hover {
+    transform: translateY(-0.25rem);
+  }
+
+  .hover\:text-red-500:hover {
+    color: #ef4444;
+  }
+
+  .hover\:bg-blue-400\/20:hover {
+    background-color: rgba(96, 165, 250, 0.2);
+  }
+
+  .hover\:underline:hover {
+    text-decoration: underline;
+  }
+
+  .transition {
+    transition: all 0.3s ease;
+  }
+
+  /* Utility */
+  .hidden {
+    display: none;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .break-all {
+    word-break: break-all;
+  }
+
+  /* Responsive flex for custom version input */
+  @media (min-width: 768px) {
+    .md\:flex-row {
+      flex-direction: row;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .flex-col-md {
+      flex-direction: column;
+    }
+  }
+}

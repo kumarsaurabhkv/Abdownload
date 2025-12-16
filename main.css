@@ -345,4 +345,35 @@
       flex-direction: column;
     }
   }
+
+ .custom-version-section {
+    background: #111;
+    padding: 20px;
+    border: 1px solid #222;
+    margin-top: 40px;
+    overflow: visible; /* Ensure content is always visible */
+}
+
+.custom-version-section .section-header {
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 0 0 20px 0;
+    color: #ff2e5e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: default; /* Not clickable */
+    user-select: none;
+    display: block;
+    pointer-events: none; /* Prevent any accidental interaction */
+}
+
+.custom-version-section .section-header::after {
+    display: none; /* No chevron */
+}
+
+.custom-version-section .section-content {
+    max-height: none; /* Always fully expanded */
+    padding: 0;
+    overflow: visible;
+}
 }

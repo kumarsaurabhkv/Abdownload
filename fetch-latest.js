@@ -1,9 +1,14 @@
-// fetch-latest.js - Fetches latest version and auto-selects it
+// fetch-latest.js - Updated to use your Cloudflare Worker proxy
 
 (async function() {
     try {
-        const response = await fetch('https://www.ableton.com/en/release-notes/live-12/');
-        if (!response.ok) throw new Error('Failed to fetch');
+        // Use your own proxy URL here
+        const proxyUrl = 'https://your-project.pages.dev/proxy';  // <-- CHANGE THIS TO YOUR ACTUAL DOMAIN
+        const targetUrl = 'https://www.ableton.com/en/release-notes/live-12/';
+        const fetchUrl = `${proxyUrl}?url=${encodeURIComponent(targetUrl)}`;
+
+        const response = await fetch(fetchUrl);
+        if (!response.ok) throw new Error('Proxy fetch failed');
 
         const text = await response.text();
         const parser = new DOMParser();
@@ -16,7 +21,7 @@
             const match = heading.textContent.trim().match(/(\d+\.\d+(\.\d+)?)/);
             if (match) {
                 latestVersion = match[1];
-                break; // First match = latest stable
+                break; // First match is the latest
             }
         }
 
@@ -39,13 +44,13 @@
                 document.getElementById('custom-version-input').style.boxShadow = '0 0 0 3px rgba(107, 177, 255, 0.3)';
             }
 
-            // Optional notification
             const notice = document.createElement('div');
             notice.className = 'info-text';
-            notice.innerHTML = `<strong>Latest version auto-selected:</strong> ${latestVersion}`;
+            notice.innerHTML = `<strong>Latest version auto-selected:</strong> ${latestVersion} (fetched live)`;
             document.querySelector('.content-area').insertBefore(notice, document.getElementById('version-sections'));
         }
     } catch (err) {
-        console.warn('Could not fetch latest version (CORS or network issue). Using default selection.', err);
+        console.warn('Failed to fetch latest version via proxy:', err);
+        // Fallback: keep the default selection
     }
 })();

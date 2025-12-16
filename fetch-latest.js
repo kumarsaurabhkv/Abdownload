@@ -1,4 +1,4 @@
-// fetch-latest.js - Fixed with robust DOM waiting and safe insertion
+// fetch-latest.js - Robust version with safer notice insertion
 
 (async function() {
     try {
@@ -64,13 +64,13 @@
             }
         }
 
-        // Helper: Wait for version grid to be ready
-        const waitForGrid = () => {
+        // Helper: Wait for contentArea to be ready (more reliable)
+        const waitForContentArea = () => {
             return new Promise((resolve) => {
                 const check = () => {
-                    const versionSections = document.getElementById('version-sections');
                     const contentArea = document.querySelector('.content-area');
-                    if (contentArea && versionSections && versionSections.children.length > 0) {
+                    const versionSections = document.getElementById('version-sections');
+                    if (contentArea && versionSections) {
                         resolve({ contentArea, versionSections });
                     } else {
                         setTimeout(check, 100);
@@ -80,41 +80,57 @@
             });
         };
 
-        const { contentArea, versionSections } = await waitForGrid();
+        const { contentArea, versionSections } = await waitForContentArea();
 
-        // Insert "new version saved" notice if applicable
-        if (isNew) {
-            const savedNotice = document.createElement('div');
-            savedNotice.className = 'info-text';
-            savedNotice.innerHTML = `<strong>New version auto-added & saved permanently:</strong> ${latestVersion}`;
-            contentArea.insertBefore(savedNotice, versionSections);
-        }
+        // Safe notice insertion function
+        const insertNoticeBeforeVersions = (html) => {
+            const notice = document.createElement('div');
+            notice.className = 'info-text';
+            notice.innerHTML = html;
 
-        // Auto-select the latest version
-        let found = false;
-        document.querySelectorAll('.version-item').forEach(item => {
-            if (item.dataset.version === latestVersion) {
-                item.classList.add('selected');
-                found = true;
+            // Find the correct insertion point
+            const referenceNode = versionSections;
+            if (referenceNode.parentNode === contentArea) {
+                contentArea.insertBefore(notice, referenceNode);
             } else {
-                item.classList.remove('selected');
+                // Fallback: append to contentArea if structure changed
+                contentArea.appendChild(notice);
             }
-        });
+        };
 
-        if (!found) {
-            const customInput = document.getElementById('custom-version-input');
-            if (customInput) {
-                customInput.value = latestVersion;
-                customInput.style.borderColor = '#ff2e5e';
-                customInput.style.boxShadow = '0 0 0 3px rgba(255, 46, 94, 0.3)';
-            }
+        // Insert notices safely
+        if (isNew) {
+            insertNoticeBeforeVersions(`<strong>New version auto-added & saved permanently:</strong> ${latestVersion}`);
         }
 
-        // Insert main "latest auto-selected" notice
-        const notice = document.createElement('div');
-        notice.className = 'info-text';
-        notice.innerHTML = `<strong>Latest version auto-selected:</strong> ${latestVersion} (fetched live from Ableton)`;
-        contentArea.insertBefore(notice, versionSections);
+        insertNoticeBeforeVersions(`<strong>Latest version auto-selected:</strong> ${latestVersion} (fetched live from Ableton)`);
+
+        // Auto-select the latest version (wait a bit more if needed)
+        let found = false;
+        const trySelect = () => {
+            document.querySelectorAll('.version-item').forEach(item => {
+                if (item.dataset.version === latestVersion) {
+                    item.classList.add('selected');
+                    found = true;
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            if (!found) {
+                const customInput = document.getElementById('custom-version-input');
+                if (customInput) {
+                    customInput.value = latestVersion;
+                    customInput.style.borderColor = '#ff2e5e';
+                    customInput.style.boxShadow = '0 0 0 3px rgba(255, 46, 94, 0.3)';
+                }
+            }
+        };
+
+        // Run selection immediately and retry a few times
+        trySelect();
+        setTimeout(trySelect, 200);
+        setTimeout(trySelect, 500);
 
     } catch (err) {
         console.warn('Failed to fetch or process latest version:', err);

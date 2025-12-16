@@ -1,4 +1,4 @@
-// fetch-latest.js - Auto-detect latest version and persist new ones to KV
+// fetch-latest.js - Fixed with robust DOM waiting and safe insertion
 
 (async function() {
     try {
@@ -21,7 +21,7 @@
             const match = headingText.match(/^(\d+\.\d+(\.\d+)?)/);
             if (match) {
                 latestVersion = match[1];
-                break; // First match is the latest
+                break;
             }
         }
 
@@ -47,7 +47,7 @@
 
         // If new version detected, save it permanently
         if (isNew) {
-            currentVersions.unshift(latestVersion); // Add as newest
+            currentVersions.unshift(latestVersion);
 
             try {
                 const updateResp = await fetch('/api/update-versions', {
@@ -58,20 +58,39 @@
 
                 if (updateResp.ok) {
                     console.log('New version successfully saved to KV:', latestVersion);
-                    
-                    const savedNotice = document.createElement('div');
-                    savedNotice.className = 'info-text';
-                    savedNotice.innerHTML = `<strong>New version auto-added & saved permanently:</strong> ${latestVersion}`;
-                    document.querySelector('.content-area').insertBefore(savedNotice, document.getElementById('version-sections'));
-                } else {
-                    console.warn('Failed to save new version to KV');
                 }
             } catch (e) {
                 console.warn('Error calling update API:', e);
             }
         }
 
-        // Auto-select the latest version in the UI
+        // Helper: Wait for version grid to be ready
+        const waitForGrid = () => {
+            return new Promise((resolve) => {
+                const check = () => {
+                    const versionSections = document.getElementById('version-sections');
+                    const contentArea = document.querySelector('.content-area');
+                    if (contentArea && versionSections && versionSections.children.length > 0) {
+                        resolve({ contentArea, versionSections });
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+        };
+
+        const { contentArea, versionSections } = await waitForGrid();
+
+        // Insert "new version saved" notice if applicable
+        if (isNew) {
+            const savedNotice = document.createElement('div');
+            savedNotice.className = 'info-text';
+            savedNotice.innerHTML = `<strong>New version auto-added & saved permanently:</strong> ${latestVersion}`;
+            contentArea.insertBefore(savedNotice, versionSections);
+        }
+
+        // Auto-select the latest version
         let found = false;
         document.querySelectorAll('.version-item').forEach(item => {
             if (item.dataset.version === latestVersion) {
@@ -82,7 +101,6 @@
             }
         });
 
-        // If not in grid (very new), use custom input
         if (!found) {
             const customInput = document.getElementById('custom-version-input');
             if (customInput) {
@@ -92,24 +110,13 @@
             }
         }
 
-        // Always show the "latest detected" notice
+        // Insert main "latest auto-selected" notice
         const notice = document.createElement('div');
         notice.className = 'info-text';
         notice.innerHTML = `<strong>Latest version auto-selected:</strong> ${latestVersion} (fetched live from Ableton)`;
-
-        const insertNotice = () => {
-            const contentArea = document.querySelector('.content-area');
-            const versionSections = document.getElementById('version-sections');
-            if (contentArea && versionSections) {
-                contentArea.insertBefore(notice, versionSections);
-            } else {
-                setTimeout(insertNotice, 100);
-            }
-        };
-        insertNotice();
+        contentArea.insertBefore(notice, versionSections);
 
     } catch (err) {
-        console.warn('Failed to fetch latest version:', err);
-        // Fallback: do nothing, user can still select manually
+        console.warn('Failed to fetch or process latest version:', err);
     }
 })();
